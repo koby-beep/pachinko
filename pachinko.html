@@ -195,13 +195,13 @@ function updatePegs() {
 
 /* ── Holes ─────────────────────────────────────────────────────────────────── */
 const HDEFS=[
-  {reward:2, label:'+2', emoji:'🍬', color:'#581c87', glow:'#a855f7'},
-  {reward:5, label:'+5', emoji:'💎', color:'#1e3a8a', glow:'#60a5fa'},
   {reward:0, label:'✗',  emoji:'💀', color:'#111827', glow:'#6b7280'},
-  {reward:20,label:'???',emoji:'⭐', color:'#78350f', glow:'#fbbf24', jackpot:true},
-  {reward:0, label:'✗',  emoji:'💀', color:'#111827', glow:'#6b7280'},
-  {reward:5, label:'+5', emoji:'💎', color:'#1e3a8a', glow:'#60a5fa'},
   {reward:2, label:'+2', emoji:'🍬', color:'#581c87', glow:'#a855f7'},
+  {reward:0, label:'✗',  emoji:'💀', color:'#111827', glow:'#6b7280'},
+  {reward:10,label:'???',emoji:'⭐', color:'#78350f', glow:'#fbbf24', jackpot:true},
+  {reward:0, label:'✗',  emoji:'💀', color:'#111827', glow:'#6b7280'},
+  {reward:2, label:'+2', emoji:'🍬', color:'#581c87', glow:'#a855f7'},
+  {reward:0, label:'✗',  emoji:'💀', color:'#111827', glow:'#6b7280'},
 ];
 const HOLES=[];
 function buildHoles(){
@@ -341,7 +341,7 @@ function stepBall(b){
   if(b.vy>0&&b.y+b.r>=HOLE_TOP){
     for(const h of HOLES){
       if(b.x>=h.x&&b.x<=h.x+h.w){
-        const won=h.jackpot?(Math.random()<.35?30:20):h.reward;
+        const won=h.jackpot?(Math.random()<.15?15:8):h.reward;
         balls+=won; score+=won; updateUI();
         addFloat(b.x,HOLE_TOP-10,h.jackpot?`🎉 +${won}!`:won>0?`+${won}`:'miss!',
           h.jackpot?'#ffd700':won>0?'#86efac':'#9ca3af');
