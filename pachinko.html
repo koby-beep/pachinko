@@ -587,6 +587,50 @@ function drawBorder(){
   archPath();ctx.strokeStyle='#92400e';ctx.lineWidth=3;ctx.stroke();
 }
 
+/* Arcade chase lights */
+function drawLights(){
+  const COLS=['#ffd700','#ff6b9d','#00e5ff','#c084fc','#fb923c'];
+  const LR=5, LOFF=8;
+  const lights=[];
+
+  // Arch: left end (π) over top to right end (2π) — clockwise in canvas
+  const archN=32;
+  for(let i=0;i<=archN;i++){
+    const a=Math.PI+(i/archN)*Math.PI;
+    lights.push({x:ACX+(AR+LOFF)*Math.cos(a), y:ACY+(AR+LOFF)*Math.sin(a)});
+  }
+
+  // Right side: from arch junction down to bottom
+  const step=22;
+  for(let y=ACY+step;y<=BOT;y+=step)
+    lights.push({x:BX+BW+LOFF, y});
+
+  // Left side: bottom back up to arch junction (keeps chase flowing)
+  const leftTmp=[];
+  for(let y=ACY+step;y<=BOT;y+=step)
+    leftTmp.push({x:BX-LOFF, y});
+  lights.push(...leftTmp.reverse());
+
+  const N=lights.length;
+  lights.forEach(({x,y},i)=>{
+    const phase=(tick*0.07-i/N*4);
+    const ci=(((Math.floor(phase)%COLS.length)+COLS.length)%COLS.length);
+    const frac=((phase%1)+1)%1;
+    const on=frac<0.55;
+    const col=COLS[ci];
+    ctx.beginPath();ctx.arc(x,y,LR,0,Math.PI*2);
+    if(on){
+      ctx.shadowBlur=14;ctx.shadowColor=col;
+      ctx.fillStyle=col;ctx.fill();
+      ctx.beginPath();ctx.arc(x-LR*.3,y-LR*.3,LR*.28,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,.85)';ctx.fill();
+    } else {
+      ctx.shadowBlur=0;ctx.fillStyle=col+'33';ctx.fill();
+    }
+    ctx.shadowBlur=0;
+  });
+}
+
 /* Game over */
 function drawGameOver(){
   if(!gameOver)return;
@@ -636,7 +680,7 @@ function render(){
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle='#090114';ctx.fillRect(0,0,W,H);
   drawBg();drawHoles();drawPegs();drawTraj();drawBalls();drawFX();
-  drawLauncherStrip();drawBorder();drawGameOver();
+  drawLauncherStrip();drawBorder();drawLights();drawGameOver();
 }
 function loop(){update();render();requestAnimationFrame(loop);}
 buildPegs();buildHoles();updateUI();loop();
