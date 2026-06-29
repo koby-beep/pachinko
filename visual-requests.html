@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visual Requests</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.30.0/dist/tabler-icons.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --surface: #f7f6f3;
+  --page: #eeecea;
+  --text: #18181b;
+  --muted: #6b7280;
+  --hint: #9ca3af;
+  --border: rgba(0,0,0,0.1);
+  --border-md: rgba(0,0,0,0.2);
+  --r: 8px;
+  --r-lg: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1c1e;
+    --surface: #2a2a2c;
+    --page: #111113;
+    --text: #f0eff0;
+    --muted: #9ca3af;
+    --hint: #6b7280;
+    --border: rgba(255,255,255,0.1);
+    --border-md: rgba(255,255,255,0.2);
+  }
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--page);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.wrap { max-width: 860px; margin: 0 auto; padding: 1.75rem 1.5rem; }
+
+.app-header { margin-bottom: 1.5rem; }
+.app-header h1 { font-size: 20px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+.app-header p { font-size: 13px; color: var(--muted); margin-top: 3px; margin-left: 28px; }
+
+.tabs {
+  display: inline-flex;
+  gap: 4px;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 4px;
+  margin-bottom: 1.25rem;
+}
+.tab {
+  padding: 7px 18px;
+  border-radius: var(--r);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.tab.on {
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.tab:hover:not(.on) { color: var(--text); }
+
+.card {
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.5rem;
+}
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 560px) { .grid2 { grid-template-columns: 1fr; } }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.full { grid-column: 1 / -1; }
+.field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.opt { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--hint); }
+
+input, select, textarea {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  padding: 9px 11px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--border-md);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.04);
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  cursor: pointer;
+}
+textarea { resize: vertical; }
+
+.btn {
+  padding: 9px 18px;
+  border-radius: var(--r);
+  border: 0.5px solid var(--border-md);
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.btn:hover { background: var(--surface); }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--text); color: var(--bg); border-color: transparent; }
+.btn-primary:hover { opacity: 0.85; background: var(--text); }
+
+.form-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 0.5px solid var(--border);
+}
+
+.priority-preview {
+  font-size: 12px;
+  color: var(--hint);
+}
+
+.alert {
+  margin-top: 1rem;
+  padding: 10px 14px;
+  border-radius: var(--r);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.alert-ok { background: #EAF3DE; color: #27500A; }
+.alert-err { background: #FCEBEB; color: #791F1F; }
+@media (prefers-color-scheme: dark) {
+  .alert-ok { background: #173404; color: #C0DD97; }
+  .alert-err { background: #501313; color: #F09595; }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.b-urgent { background: #FCEBEB; color: #A32D2D; }
+.b-high   { background: #FAEEDA; color: #854F0B; }
+.b-medium { background: #E6F1FB; color: #185FA5; }
+.b-low    { background: #EAF3DE; color: #3B6D11; }
+@media (prefers-color-scheme: dark) {
+  .b-urgent { background: #501313; color: #F09595; }
+  .b-high   { background: #412402; color: #FAC775; }
+  .b-medium { background: #042C53; color: #B5D4F4; }
+  .b-low    { background: #173404; color: #97C459; }
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--r);
+  font-size: 11px;
+  background: var(--surface);
+  color: var(--muted);
+  border: 0.5px solid var(--border);
+}
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+@media (max-width: 560px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+.stat {
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1rem 1.1rem;
+}
+.stat-n { font-size: 30px; font-weight: 500; line-height: 1; margin-bottom: 4px; }
+.stat-l { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+
+.filters { display: flex; gap: 6px; margin-bottom: 1rem; flex-wrap: wrap; }
+.fp {
+  padding: 5px 14px;
+  border-radius: 99px;
+  border: 0.5px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.fp.on { background: var(--text); color: var(--bg); border-color: transparent; }
+.fp:hover:not(.on) { background: var(--surface); color: var(--text); }
+
+.req {
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1rem 1.25rem;
+  margin-bottom: 8px;
+  transition: border-color 0.15s;
+}
+.req:hover { border-color: var(--border-md); }
+
+.req-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.req-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.req-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+.req-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ri { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 3px; }
+.ri i { font-size: 12px; }
+
+.req-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.ssel {
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: var(--r);
+  border: 0.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  font-family: inherit;
+  outline: none;
+}
+.del {
+  padding: 6px 8px;
+  border-radius: var(--r);
+  border: 0.5px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  color: var(--hint);
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  transition: all 0.15s;
+}
+.del:hover { color: #A32D2D; border-color: rgba(163,45,45,0.3); background: #FCEBEB; }
+@media (prefers-color-scheme: dark) { .del:hover { background: #501313; border-color: rgba(240,149,149,0.3); color: #F09595; } }
+
+.empty { text-align: center; padding: 3rem 1rem; color: var(--hint); }
+.empty i { font-size: 36px; display: block; margin-bottom: 10px; opacity: 0.6; }
+.empty p { font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="app-header">
+    <h1><i class="ti ti-palette" aria-hidden="true"></i>Visual Requests</h1>
+    <p>Submit and track design requests for your team</p>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab on" id="tab-form" onclick="go('form')" role="tab" aria-selected="true">
+      <i class="ti ti-plus" aria-hidden="true"></i> New request
+    </button>
+    <button class="tab" id="tab-dash" onclick="go('dash')" role="tab" aria-selected="false">
+      <i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard
+    </button>
+  </div>
+
+  <!-- Form -->
+  <div id="v-form" role="tabpanel">
+    <div class="card">
+      <div class="grid2">
+        <div class="field">
+          <label for="f-name">Your name</label>
+          <input type="text" id="f-name" placeholder="e.g. Sarah">
+        </div>
+        <div class="field">
+          <label for="f-type">Visual type</label>
+          <select id="f-type">
+            <option value="">Select a type...</option>
+            <option>SMM ad</option>
+            <option>PPC ad</option>
+            <option>Poster</option>
+            <option>Landing page</option>
+            <option>Video</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="f-count">Number of visuals</label>
+          <input type="number" id="f-count" min="1" placeholder="e.g. 3">
+        </div>
+        <div class="field">
+          <label for="f-size">Size &amp; format</label>
+          <input type="text" id="f-size" placeholder="e.g. 1080×1080 px, PNG">
+        </div>
+
+        <div class="field">
+          <label for="f-date">Date required</label>
+          <input type="date" id="f-date">
+        </div>
+        <div class="field" style="justify-content: flex-end;">
+          <label style="opacity:0;" aria-hidden="true">·</label>
+          <p class="priority-preview" id="p-preview" aria-live="polite">
+            Priority is set automatically from the date
+          </p>
+        </div>
+
+        <div class="field full">
+          <label for="f-content">Visual content</label>
+          <textarea id="f-content" rows="4" placeholder="Describe what goes in the visual — product name, message, key imagery, colors, tone, any text to include..."></textarea>
+        </div>
+
+        <div class="field full">
+          <label for="f-ref">Reference or inspiration <span class="opt">(optional)</span></label>
+          <input type="text" id="f-ref" placeholder="Paste a link, file name, or describe the look you want">
+        </div>
+      </div>
+
+      <div class="form-foot">
+        <button class="btn" onclick="clearForm()">
+          <i class="ti ti-x" aria-hidden="true"></i> Clear
+        </button>
+        <button class="btn btn-primary" onclick="submit()">
+          <i class="ti ti-send" aria-hidden="true"></i> Submit request
+        </button>
+      </div>
+
+      <div id="msg-ok" class="alert alert-ok" style="display:none;" role="alert">
+        <i class="ti ti-circle-check" aria-hidden="true"></i>
+        Request submitted — switch to the dashboard to see it.
+      </div>
+      <div id="msg-err" class="alert alert-err" style="display:none;" role="alert">
+        <i class="ti ti-alert-circle" aria-hidden="true"></i>
+        Please fill in all required fields before submitting.
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="v-dash" style="display:none;" role="tabpanel">
+    <div class="stats" id="stats" aria-label="Summary stats"></div>
+    <div class="filters" role="group" aria-label="Filter requests">
+      <button class="fp on" id="fp-all"        onclick="filter('all')">All</button>
+      <button class="fp"    id="fp-pending"    onclick="filter('pending')">Pending</button>
+      <button class="fp"    id="fp-inprogress" onclick="filter('in progress')">In progress</button>
+      <button class="fp"    id="fp-done"       onclick="filter('done')">Done</button>
+    </div>
+    <div id="list" aria-live="polite"></div>
+  </div>
+
+</div>
+
+<script>
+var data = JSON.parse(localStorage.getItem('vr2') || '[]');
+var activeF = 'all';
+
+var ICONS = {
+  'SMM ad':       'ti-device-mobile',
+  'PPC ad':       'ti-ad-2',
+  'Poster':       'ti-photo',
+  'Landing page': 'ti-browser',
+  'Video':        'ti-video'
+};
+
+function save() { localStorage.setItem('vr2', JSON.stringify(data)); }
+
+function pri(d) {
+  if (!d) return { label: 'Low', cls: 'b-low', n: 4 };
+  var days = Math.ceil((new Date(d + 'T00:00:00') - new Date()) / 86400000);
+  if (days <= 1)  return { label: 'Urgent', cls: 'b-urgent', n: 1 };
+  if (days <= 5)  return { label: 'High',   cls: 'b-high',   n: 2 };
+  if (days <= 14) return { label: 'Medium', cls: 'b-medium', n: 3 };
+  return { label: 'Low', cls: 'b-low', n: 4 };
+}
+
+function fmt(d) {
+  if (!d) return '';
+  return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function dl(d) {
+  if (!d) return null;
+  return Math.ceil((new Date(d + 'T00:00:00') - new Date()) / 86400000);
+}
+
+document.getElementById('f-date').addEventListener('change', function() {
+  var p = pri(this.value);
+  var days = dl(this.value);
+  var suffix = days === null ? '' : days < 0 ? ' — past due!' : days === 0 ? ' — due today!' : ' — ' + days + ' day' + (days === 1 ? '' : 's') + ' away';
+  document.getElementById('p-preview').innerHTML =
+    'Priority: <span class="badge ' + p.cls + '" style="vertical-align: 1px;">' + p.label + '</span>' +
+    '<span style="color: var(--hint); font-size: 11px; margin-left: 4px;">' + suffix + '</span>';
+});
+
+function go(tab) {
+  document.getElementById('v-form').style.display = tab === 'form' ? 'block' : 'none';
+  document.getElementById('v-dash').style.display = tab === 'dash' ? 'block' : 'none';
+  document.getElementById('tab-form').className = 'tab' + (tab === 'form' ? ' on' : '');
+  document.getElementById('tab-dash').className = 'tab' + (tab === 'dash' ? ' on' : '');
+  document.getElementById('tab-form').setAttribute('aria-selected', tab === 'form');
+  document.getElementById('tab-dash').setAttribute('aria-selected', tab === 'dash');
+  if (tab === 'dash') renderDash();
+}
+
+function clearForm() {
+  ['f-name','f-type','f-count','f-size','f-date','f-content','f-ref'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('p-preview').textContent = 'Priority is set automatically from the date';
+  document.getElementById('msg-ok').style.display = 'none';
+  document.getElementById('msg-err').style.display = 'none';
+}
+
+function submit() {
+  document.getElementById('msg-ok').style.display = 'none';
+  document.getElementById('msg-err').style.display = 'none';
+
+  var name    = document.getElementById('f-name').value.trim();
+  var type    = document.getElementById('f-type').value;
+  var count   = parseInt(document.getElementById('f-count').value) || 0;
+  var size    = document.getElementById('f-size').value.trim();
+  var date    = document.getElementById('f-date').value;
+  var content = document.getElementById('f-content').value.trim();
+  var ref     = document.getElementById('f-ref').value.trim();
+
+  if (!name || !type || !count || !size || !date || !content) {
+    document.getElementById('msg-err').style.display = 'flex';
+    return;
+  }
+
+  data.unshift({
+    id: Date.now(),
+    name: name, type: type, count: count,
+    size: size, date: date, content: content, ref: ref,
+    status: 'pending',
+    created: new Date().toISOString().split('T')[0]
+  });
+  save();
+  clearForm();
+  document.getElementById('msg-ok').style.display = 'flex';
+}
+
+function filter(f) {
+  activeF = f;
+  var map = { 'all': 'fp-all', 'pending': 'fp-pending', 'in progress': 'fp-inprogress', 'done': 'fp-done' };
+  Object.keys(map).forEach(function(k) {
+    document.getElementById(map[k]).className = 'fp' + (k === f ? ' on' : '');
+  });
+  renderList();
+}
+
+function setStatus(id, status) {
+  var r = data.find(function(r) { return r.id === id; });
+  if (r) { r.status = status; save(); renderDash(); }
+}
+
+function del(id) {
+  if (!confirm('Remove this request? This cannot be undone.')) return;
+  data = data.filter(function(r) { return r.id !== id; });
+  save();
+  renderDash();
+}
+
+function renderDash() {
+  var today = new Date().toISOString().split('T')[0];
+  var total   = data.length;
+  var urgent  = data.filter(function(r) { return pri(r.date).label === 'Urgent' && r.status !== 'done'; }).length;
+  var dueToday = data.filter(function(r) { return r.date === today && r.status !== 'done'; }).length;
+  var done    = data.filter(function(r) { return r.status === 'done'; }).length;
+
+  document.getElementById('stats').innerHTML =
+    stat(total,    '',         'Total requests') +
+    stat(urgent,   '#A32D2D',  'Urgent') +
+    stat(dueToday, '#854F0B',  'Due today') +
+    stat(done,     '#3B6D11',  'Completed');
+
+  renderList();
+}
+
+function stat(n, color, label) {
+  return '<div class="stat"><div class="stat-n"' + (color ? ' style="color:' + color + '"' : '') + '>' + n + '</div><div class="stat-l">' + label + '</div></div>';
+}
+
+function renderList() {
+  var filtered = activeF === 'all' ? data : data.filter(function(r) { return r.status === activeF; });
+  var sorted = filtered.slice().sort(function(a, b) {
+    var d = pri(a.date).n - pri(b.date).n;
+    if (d) return d;
+    return new Date(a.date) - new Date(b.date);
+  });
+
+  var el = document.getElementById('list');
+  if (!sorted.length) {
+    el.innerHTML = '<div class="empty"><i class="ti ti-inbox" aria-hidden="true"></i><p>No requests to show</p></div>';
+    return;
+  }
+
+  el.innerHTML = sorted.map(function(r) {
+    var p    = pri(r.date);
+    var days = dl(r.date);
+    var dlText  = days === null ? '' : days < 0 ? 'Overdue' : days === 0 ? 'Due today' : days + 'd left';
+    var dlColor = (days !== null && days < 0) ? 'color:#A32D2D;font-weight:600;' : (days === 0 ? 'color:#854F0B;font-weight:600;' : '');
+    var icon = ICONS[r.type] || 'ti-palette';
+    var refSnip = r.ref ? r.ref.substring(0, 35) + (r.ref.length > 35 ? '…' : '') : '';
+
+    return '<div class="req">' +
+      '<div class="req-row">' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div class="req-meta">' +
+            '<span class="badge ' + p.cls + '">' + p.label + '</span>' +
+            '<span class="chip"><i class="ti ' + icon + '" aria-hidden="true" style="font-size:11px;"></i>' + esc(r.type) + '</span>' +
+            '<span style="font-size:12px;color:var(--hint);">by ' + esc(r.name) + '</span>' +
+          '</div>' +
+          '<div class="req-title">' + esc(r.content) + '</div>' +
+          '<div class="req-info">' +
+            '<span class="ri"><i class="ti ti-copy"></i>' + r.count + ' visual' + (r.count !== 1 ? 's' : '') + '</span>' +
+            '<span class="ri"><i class="ti ti-dimensions"></i>' + esc(r.size) + '</span>' +
+            '<span class="ri" style="' + dlColor + '"><i class="ti ti-calendar"></i>' + fmt(r.date) + (dlText ? ' · ' + dlText : '') + '</span>' +
+            (refSnip ? '<span class="ri" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><i class="ti ti-link"></i>' + esc(refSnip) + '</span>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="req-actions">' +
+          '<select class="ssel" onchange="setStatus(' + r.id + ', this.value)" aria-label="Status">' +
+            '<option value="pending"'     + (r.status === 'pending'     ? ' selected' : '') + '>Pending</option>' +
+            '<option value="in progress"' + (r.status === 'in progress' ? ' selected' : '') + '>In progress</option>' +
+            '<option value="done"'        + (r.status === 'done'        ? ' selected' : '') + '>Done</option>' +
+          '</select>' +
+          '<button class="del" onclick="del(' + r.id + ')" aria-label="Delete request"><i class="ti ti-trash" aria-hidden="true"></i></button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
